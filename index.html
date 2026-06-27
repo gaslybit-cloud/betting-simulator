@@ -165,6 +165,33 @@
       font-weight: 700;
     }
 
+    .stake-editor {
+      padding: 14px 0 2px;
+      border-top: 1px solid var(--line);
+    }
+
+    .stake-editor h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .stake-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stake-card {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .stake-input {
+      width: 100%;
+      min-width: 0;
+    }
+
     input[type="checkbox"] {
       width: 20px;
       height: 20px;
@@ -340,6 +367,10 @@
       .summary {
         grid-template-columns: 1fr;
       }
+
+      .stake-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
   </style>
 </head>
@@ -362,30 +393,30 @@
         <div class="inputs">
           <div class="match">
             <div>
-              <div class="match-name">葡萄牙 vs 对手</div>
-              <div class="teams">葡萄牙进球 / 对手进球</div>
+              <div class="match-name">葡萄牙 vs 哥伦比亚</div>
+              <div class="teams">葡萄牙进球 / 哥伦比亚进球</div>
             </div>
             <label>
               <span class="score-label">葡萄牙</span>
               <input id="portugalFor" type="number" min="0" max="30" value="0">
             </label>
             <label>
-              <span class="score-label">对手</span>
+              <span class="score-label">哥伦比亚</span>
               <input id="portugalAgainst" type="number" min="0" max="30" value="0">
             </label>
           </div>
 
           <div class="match">
             <div>
-              <div class="match-name">阿根廷 vs 对手</div>
-              <div class="teams">阿根廷进球 / 对手进球</div>
+              <div class="match-name">阿根廷 vs 约旦</div>
+              <div class="teams">阿根廷进球 / 约旦进球</div>
             </div>
             <label>
               <span class="score-label">阿根廷</span>
               <input id="argentinaFor" type="number" min="0" max="30" value="0">
             </label>
             <label>
-              <span class="score-label">对手</span>
+              <span class="score-label">约旦</span>
               <input id="argentinaAgainst" type="number" min="0" max="30" value="0">
             </label>
           </div>
@@ -440,6 +471,32 @@
             梅西任何时间进球
           </label>
 
+          <div class="stake-editor">
+            <h3>每张票本金</h3>
+            <div class="stake-grid">
+              <label class="stake-card">
+                <span class="score-label">票1</span>
+                <input class="stake-input" id="stake1" type="number" min="0" step="0.01" value="10">
+              </label>
+              <label class="stake-card">
+                <span class="score-label">票2</span>
+                <input class="stake-input" id="stake2" type="number" min="0" step="0.01" value="5">
+              </label>
+              <label class="stake-card">
+                <span class="score-label">票3</span>
+                <input class="stake-input" id="stake3" type="number" min="0" step="0.01" value="12.05">
+              </label>
+              <label class="stake-card">
+                <span class="score-label">票4</span>
+                <input class="stake-input" id="stake4" type="number" min="0" step="0.01" value="4">
+              </label>
+              <label class="stake-card">
+                <span class="score-label">票5</span>
+                <input class="stake-input" id="stake5" type="number" min="0" step="0.01" value="3">
+              </label>
+            </div>
+          </div>
+
           <div class="actions">
             <button id="calculateBtn" type="button">重新计算</button>
             <button class="secondary" id="resetBtn" type="button">清空比分</button>
@@ -484,12 +541,10 @@
   </main>
 
   <script>
-    const TOTAL_STAKE = 34.05;
-
     const tickets = [
       {
         name: "票1",
-        stake: 10,
+        stakeId: "stake1",
         odds: 2.30,
         conditions: (m, messi) => [
           ["葡萄牙 +1 胜", handicapWin(m.portugal, 1)],
@@ -499,7 +554,7 @@
       },
       {
         name: "票2",
-        stake: 5,
+        stakeId: "stake2",
         odds: 3.90,
         conditions: (m, messi) => [
           ["英格兰赢", win(m.england)],
@@ -511,7 +566,7 @@
       },
       {
         name: "票3",
-        stake: 12.05,
+        stakeId: "stake3",
         odds: 3.07,
         conditions: (m, messi) => [
           ["克罗地亚 +1 赢", handicapWin(m.croatia, 1)],
@@ -523,7 +578,7 @@
       },
       {
         name: "票4",
-        stake: 4,
+        stakeId: "stake4",
         odds: 13.87,
         conditions: (m, messi) => [
           ["英格兰 -1 赢", handicapWin(m.england, -1)],
@@ -535,7 +590,7 @@
       },
       {
         name: "票5",
-        stake: 3,
+        stakeId: "stake5",
         odds: 2.50,
         conditions: (m, messi) => [
           ["阿根廷 -1 赢", handicapWin(m.argentina, -1)],
@@ -553,9 +608,17 @@
       "croatiaFor", "croatiaAgainst"
     ];
 
+    const stakeFields = tickets.map((ticket) => ticket.stakeId);
+
     function numberFrom(id) {
       const element = document.getElementById(id);
       const value = Number.parseInt(element.value, 10);
+      return Number.isFinite(value) && value >= 0 ? value : 0;
+    }
+
+    function stakeFrom(id) {
+      const element = document.getElementById(id);
+      const value = Number.parseFloat(element.value);
       return Number.isFinite(value) && value >= 0 ? value : 0;
     }
 
@@ -605,29 +668,34 @@
       const matches = getMatches();
       const messiScored = document.getElementById("messiScored").checked;
       const rows = [];
+      let totalStake = 0;
       let totalReturn = 0;
 
       tickets.forEach((ticket) => {
+        const stake = stakeFrom(ticket.stakeId);
         const conditions = ticket.conditions(matches, messiScored);
         const allHit = conditions.every((condition) => condition[1]);
-        const returnAmount = allHit ? ticket.stake * ticket.odds : 0;
-        const net = returnAmount - ticket.stake;
+        const returnAmount = allHit ? stake * ticket.odds : 0;
+        const net = returnAmount - stake;
 
+        totalStake += stake;
         totalReturn += returnAmount;
         rows.push(`
           <tr>
             <td><strong>${ticket.name}</strong></td>
             <td>${statusBadge(allHit)}</td>
             <td>${money(returnAmount)}</td>
-            <td>${money(ticket.stake)}</td>
+            <td>${money(stake)}</td>
             <td class="${net >= 0 ? "profit" : "loss"}">${money(net)}</td>
             <td>${conditionDetails(conditions)}</td>
           </tr>
         `);
       });
 
-      const totalNet = totalReturn - TOTAL_STAKE;
+      const totalNet = totalReturn - totalStake;
       document.getElementById("resultsBody").innerHTML = rows.join("");
+      document.getElementById("topStake").textContent = money(totalStake);
+      document.getElementById("stakeMetric").textContent = money(totalStake);
       document.getElementById("returnMetric").textContent = money(totalReturn);
       document.getElementById("netMetric").textContent = money(totalNet);
       document.getElementById("netMetric").className = totalNet >= 0 ? "profit" : "loss";
@@ -642,6 +710,9 @@
     }
 
     fields.forEach((id) => {
+      document.getElementById(id).addEventListener("input", render);
+    });
+    stakeFields.forEach((id) => {
       document.getElementById(id).addEventListener("input", render);
     });
     document.getElementById("messiScored").addEventListener("change", render);
