@@ -487,12 +487,12 @@
               <label class="stake-card">
                 <span class="score-label">票7</span>
                 <input class="stake-input" id="stake7" type="number" min="0" step="0.01" value="0" placeholder="本金" title="本金">
-                <input class="stake-input" id="odds7" type="number" min="0" step="0.001" value="11.92" placeholder="赔率" title="赔率">
+                <input class="stake-input" id="odds7" type="number" min="0" step="0.001" value="6.91" placeholder="赔率" title="赔率">
               </label>
               <label class="stake-card">
                 <span class="score-label">票8</span>
                 <input class="stake-input" id="stake8" type="number" min="0" step="0.01" value="0" placeholder="本金" title="本金">
-                <input class="stake-input" id="odds8" type="number" min="0" step="0.001" value="16.22" placeholder="赔率" title="赔率">
+                <input class="stake-input" id="odds8" type="number" min="0" step="0.001" value="8.96" placeholder="赔率" title="赔率">
               </label>
             </div>
           </div>
@@ -613,10 +613,10 @@
         name: "第七串",
         stakeId: "stake7",
         oddsId: "odds7",
-        odds: 11.92,
+        odds: 6.91,
         conditions: (m) => [
           ["加拿大独赢", win(m.canada)],
-          ["巴西 -1 胜", handicapWin(m.brazil, -1)],
+          ["巴西 胜", win(m.brazil)],
           ["德国 -1 胜", handicapWin(m.germany, -1)],
           ["荷兰 +1 胜", handicapWin(m.netherlands, 1)]
         ]
@@ -625,10 +625,10 @@
         name: "第八串",
         stakeId: "stake8",
         oddsId: "odds8",
-        odds: 16.22,
+        odds: 8.96,
         conditions: (m) => [
           ["加拿大独赢", win(m.canada)],
-          ["巴西 -1 胜", handicapWin(m.brazil, -1)],
+          ["巴西 胜", win(m.brazil)],
           ["德国 -1 胜", handicapWin(m.germany, -1)],
           ["摩洛哥 +1 胜", handicapWin(m.morocco, 1)]
         ]
