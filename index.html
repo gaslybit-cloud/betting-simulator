@@ -280,13 +280,13 @@
     }
 
     .table-wrap {
-      overflow-x: auto;
+      overflow-x: visible;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 780px;
+      min-width: 0;
     }
 
     th,
@@ -307,6 +307,30 @@
 
     tbody tr:last-child td {
       border-bottom: 0;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 74px;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 112px;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3),
+    th:nth-child(4),
+    td:nth-child(4),
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 92px;
+      white-space: nowrap;
+    }
+
+    .details-cell {
+      min-width: 0;
     }
 
     .status {
@@ -340,24 +364,61 @@
       font-weight: 750;
     }
 
-    details {
-      max-width: 420px;
-      color: var(--muted);
-    }
-
-    summary {
-      color: var(--ink);
-      cursor: pointer;
-      font-weight: 700;
-    }
-
     .condition-list {
-      margin: 8px 0 0;
-      padding-left: 18px;
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
     .condition-list li {
-      margin: 3px 0;
+      margin: 0;
+    }
+
+    .condition-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      line-height: 1.35;
+    }
+
+    .condition-item.hit {
+      border-color: #b8ded0;
+      background: var(--good-bg);
+    }
+
+    .condition-item.miss {
+      border-color: #efc6bf;
+      background: var(--bad-bg);
+    }
+
+    .condition-text {
+      min-width: 0;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+
+    .condition-result {
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .condition-item.hit .condition-result {
+      color: #0d604e;
+      background: #d5eee4;
+    }
+
+    .condition-item.miss .condition-result {
+      color: var(--warn);
+      background: #f4d8d3;
     }
 
     @media (max-width: 900px) {
@@ -396,6 +457,54 @@
 
       .stake-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody tr {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      tbody tr:last-child {
+        border-bottom: 0;
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr);
+        gap: 10px;
+        padding: 7px 0;
+        border-bottom: 0;
+      }
+
+      td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      td.details-cell {
+        display: block;
+        padding-top: 10px;
+      }
+
+      td.details-cell::before {
+        display: block;
+        margin-bottom: 8px;
       }
     }
   </style>
@@ -752,9 +861,14 @@
 
     function conditionDetails(conditions) {
       const items = conditions
-        .map(([label, hit]) => `<li>${label}: ${hit ? "命中" : "未中"}</li>`)
+        .map(([label, hit]) => `
+          <li class="condition-item ${hit ? "hit" : "miss"}">
+            <span class="condition-text">${label}</span>
+            <span class="condition-result">${hit ? "命中" : "未中"}</span>
+          </li>
+        `)
         .join("");
-      return `<details><summary>查看明细</summary><ul class="condition-list">${items}</ul></details>`;
+      return `<ul class="condition-list">${items}</ul>`;
     }
 
     function render() {
@@ -775,12 +889,12 @@
         totalReturn += returnAmount;
         rows.push(`
           <tr>
-            <td><strong>${ticket.name}</strong></td>
-            <td>${statusBadge(allHit)}</td>
-            <td>${money(returnAmount)}</td>
-            <td>${money(stake)}</td>
-            <td class="${net >= 0 ? "profit" : "loss"}">${money(net)}</td>
-            <td>${conditionDetails(conditions)}</td>
+            <td data-label="票"><strong>${ticket.name}</strong></td>
+            <td data-label="条件是否全中">${statusBadge(allHit)}</td>
+            <td data-label="返还金额">${money(returnAmount)}</td>
+            <td data-label="本金">${money(stake)}</td>
+            <td data-label="净盈亏" class="${net >= 0 ? "profit" : "loss"}">${money(net)}</td>
+            <td data-label="条件明细" class="details-cell">${conditionDetails(conditions)}</td>
           </tr>
         `);
       });
