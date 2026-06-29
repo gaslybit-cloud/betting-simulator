@@ -32,7 +32,7 @@
     }
 
     .app {
-      width: min(1180px, calc(100vw - 32px));
+      width: min(1400px, calc(100vw - 32px));
       margin: 0 auto;
       padding: 28px 0 40px;
     }
@@ -370,6 +370,7 @@
       margin: 0;
       padding: 0;
       list-style: none;
+      font-size: 13px;
     }
 
     .condition-list li {
@@ -978,9 +979,6 @@
         `)
         .join("");
       const list = `<ul class="condition-list">${items}</ul>`;
-      if (conditions.length >= 5) {
-        return `<details class="condition-toggle"><summary>${conditions.length} 条明细，点击展开</summary>${list}</details>`;
-      }
       return list;
     }
 
