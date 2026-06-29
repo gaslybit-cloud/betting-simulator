@@ -376,6 +376,21 @@
       margin: 0;
     }
 
+    .condition-toggle {
+      color: inherit;
+    }
+
+    .condition-toggle summary {
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .condition-toggle .condition-list {
+      margin-top: 5px;
+    }
+
     .condition-item {
       line-height: 1.35;
       overflow-wrap: anywhere;
@@ -566,6 +581,56 @@
             </label>
           </div>
 
+          <div class="match">
+            <div>
+              <div class="match-name">科特迪瓦 vs 挪威</div>
+              <div class="teams">科特迪瓦进球 / 挪威进球</div>
+            </div>
+            <label>
+              <span class="score-label">科特迪瓦</span>
+              <input id="ivoryCoastFor" type="number" min="0" max="30" value="0">
+            </label>
+            <label>
+              <span class="score-label">挪威</span>
+              <input id="ivoryCoastAgainst" type="number" min="0" max="30" value="0">
+            </label>
+          </div>
+
+          <div class="match">
+            <div>
+              <div class="match-name">墨西哥 vs 厄瓜多尔</div>
+              <div class="teams">墨西哥进球 / 厄瓜多尔进球</div>
+            </div>
+            <label>
+              <span class="score-label">墨西哥</span>
+              <input id="mexicoFor" type="number" min="0" max="30" value="0">
+            </label>
+            <label>
+              <span class="score-label">厄瓜多尔</span>
+              <input id="mexicoAgainst" type="number" min="0" max="30" value="0">
+            </label>
+          </div>
+
+          <div class="match">
+            <div>
+              <div class="match-name">法国 vs 瑞典</div>
+              <div class="teams">法国进球 / 瑞典进球</div>
+            </div>
+            <label>
+              <span class="score-label">法国</span>
+              <input id="franceFor" type="number" min="0" max="30" value="0">
+            </label>
+            <label>
+              <span class="score-label">瑞典</span>
+              <input id="franceAgainst" type="number" min="0" max="30" value="0">
+            </label>
+          </div>
+
+          <label class="checkbox-row">
+            <input id="mbappeOutsideBoxGoal" type="checkbox">
+            <span>姆巴佩禁区外射门得分</span>
+          </label>
+
           <div class="stake-editor">
             <h3>每张票本金和赔率</h3>
             <div class="stake-grid">
@@ -633,6 +698,28 @@
                 <label class="stake-field">
                   <span class="field-label">赔率</span>
                   <input class="stake-input" id="odds8" type="number" min="0" step="0.001" value="8.96" placeholder="赔率" title="第八串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
+                <span class="score-label">第九串</span>
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake9" type="number" min="0" step="0.01" value="10" placeholder="本金" title="第九串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds9" type="number" min="0" step="0.001" value="4.127" placeholder="赔率" title="第九串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
+                <span class="score-label">第十串</span>
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake10" type="number" min="0" step="0.01" value="1" placeholder="本金" title="第十串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds10" type="number" min="0" step="0.001" value="11.00" placeholder="赔率" title="第十串 赔率">
                 </label>
               </div>
             </div>
@@ -753,6 +840,27 @@
           ["德国 -1 胜", handicapWin(m.germany, -1)],
           ["摩洛哥 +1 胜", handicapWin(m.morocco, 1)]
         ]
+      },
+      {
+        name: "第九串",
+        stakeId: "stake9",
+        oddsId: "odds9",
+        odds: 4.127,
+        conditions: (m) => [
+          ["德国独赢", win(m.germany)],
+          ["挪威独赢", win(m.norway)],
+          ["墨西哥 +1 胜", handicapWin(m.mexico, 1)],
+          ["法国独赢", win(m.france)]
+        ]
+      },
+      {
+        name: "第十串",
+        stakeId: "stake10",
+        oddsId: "odds10",
+        odds: 11.00,
+        conditions: (m) => [
+          ["姆巴佩禁区外射门得分", m.mbappeOutsideBoxGoal]
+        ]
       }
     ];
 
@@ -760,8 +868,12 @@
       "southAfricaFor", "southAfricaAgainst",
       "brazilFor", "brazilAgainst",
       "germanyFor", "germanyAgainst",
-      "netherlandsFor", "netherlandsAgainst"
+      "netherlandsFor", "netherlandsAgainst",
+      "ivoryCoastFor", "ivoryCoastAgainst",
+      "mexicoFor", "mexicoAgainst",
+      "franceFor", "franceAgainst"
     ];
+    const propFields = ["mbappeOutsideBoxGoal"];
 
     const stakeFields = tickets.map((ticket) => ticket.stakeId);
     const oddsFields = tickets.map((ticket) => ticket.oddsId);
@@ -784,6 +896,10 @@
       return Number.isFinite(value) && value >= 0 ? value : ticket.odds;
     }
 
+    function checkedFrom(id) {
+      return document.getElementById(id).checked;
+    }
+
     function getMatches() {
       const southAfricaFor = numberFrom("southAfricaFor");
       const southAfricaAgainst = numberFrom("southAfricaAgainst");
@@ -793,6 +909,12 @@
       const germanyAgainst = numberFrom("germanyAgainst");
       const netherlandsFor = numberFrom("netherlandsFor");
       const netherlandsAgainst = numberFrom("netherlandsAgainst");
+      const ivoryCoastFor = numberFrom("ivoryCoastFor");
+      const ivoryCoastAgainst = numberFrom("ivoryCoastAgainst");
+      const mexicoFor = numberFrom("mexicoFor");
+      const mexicoAgainst = numberFrom("mexicoAgainst");
+      const franceFor = numberFrom("franceFor");
+      const franceAgainst = numberFrom("franceAgainst");
 
       return {
         southAfrica: { for: southAfricaFor, against: southAfricaAgainst },
@@ -802,7 +924,14 @@
         germany: { for: germanyFor, against: germanyAgainst },
         paraguay: { for: germanyAgainst, against: germanyFor },
         netherlands: { for: netherlandsFor, against: netherlandsAgainst },
-        morocco: { for: netherlandsAgainst, against: netherlandsFor }
+        morocco: { for: netherlandsAgainst, against: netherlandsFor },
+        ivoryCoast: { for: ivoryCoastFor, against: ivoryCoastAgainst },
+        norway: { for: ivoryCoastAgainst, against: ivoryCoastFor },
+        mexico: { for: mexicoFor, against: mexicoAgainst },
+        ecuador: { for: mexicoAgainst, against: mexicoFor },
+        france: { for: franceFor, against: franceAgainst },
+        sweden: { for: franceAgainst, against: franceFor },
+        mbappeOutsideBoxGoal: checkedFrom("mbappeOutsideBoxGoal")
       };
     }
 
@@ -848,7 +977,11 @@
           </li>
         `)
         .join("");
-      return `<ul class="condition-list">${items}</ul>`;
+      const list = `<ul class="condition-list">${items}</ul>`;
+      if (conditions.length >= 5) {
+        return `<details class="condition-toggle"><summary>${conditions.length} 条明细，点击展开</summary>${list}</details>`;
+      }
+      return list;
     }
 
     function render() {
@@ -892,11 +1025,17 @@
       fields.forEach((id) => {
         document.getElementById(id).value = 0;
       });
+      propFields.forEach((id) => {
+        document.getElementById(id).checked = false;
+      });
       render();
     }
 
     fields.forEach((id) => {
       document.getElementById(id).addEventListener("input", render);
+    });
+    propFields.forEach((id) => {
+      document.getElementById(id).addEventListener("change", render);
     });
     stakeFields.forEach((id) => {
       document.getElementById(id).addEventListener("input", render);
