@@ -166,24 +166,41 @@
     }
 
     .stake-editor {
-      padding: 14px 0 2px;
+      padding: 16px 0 4px;
       border-top: 1px solid var(--line);
     }
 
     .stake-editor h3 {
-      margin: 0 0 10px;
+      margin: 0 0 12px;
       font-size: 16px;
     }
 
     .stake-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+      gap: 12px;
     }
 
     .stake-card {
       display: grid;
-      gap: 6px;
+      gap: 9px;
+      min-width: 0;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfb;
+    }
+
+    .stake-card .score-label {
+      margin-bottom: 0;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .stake-field {
+      display: grid;
+      gap: 5px;
       min-width: 0;
     }
 
@@ -197,6 +214,8 @@
     .stake-input {
       width: 100%;
       min-width: 0;
+      height: 40px;
+      padding: 8px 9px;
     }
 
     input[type="checkbox"] {
@@ -461,48 +480,72 @@
           <div class="stake-editor">
             <h3>每张票本金和赔率</h3>
             <div class="stake-grid">
-              <label class="stake-card">
+              <div class="stake-card">
                 <span class="score-label">第一串</span>
-                <span class="field-label">第一串 本金</span>
-                <input class="stake-input" id="stake1" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第一串 本金">
-                <span class="field-label">第一串 赔率</span>
-                <input class="stake-input" id="odds1" type="number" min="0" step="0.001" value="6.80" placeholder="赔率" title="第一串 赔率">
-              </label>
-              <label class="stake-card">
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake1" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第一串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds1" type="number" min="0" step="0.001" value="6.80" placeholder="赔率" title="第一串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
                 <span class="score-label">第二串</span>
-                <span class="field-label">第二串 本金</span>
-                <input class="stake-input" id="stake2" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第二串 本金">
-                <span class="field-label">第二串 赔率</span>
-                <input class="stake-input" id="odds2" type="number" min="0" step="0.001" value="4.76" placeholder="赔率" title="第二串 赔率">
-              </label>
-              <label class="stake-card">
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake2" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第二串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds2" type="number" min="0" step="0.001" value="4.76" placeholder="赔率" title="第二串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
                 <span class="score-label">第三串</span>
-                <span class="field-label">第三串 本金</span>
-                <input class="stake-input" id="stake3" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第三串 本金">
-                <span class="field-label">第三串 赔率</span>
-                <input class="stake-input" id="odds3" type="number" min="0" step="0.001" value="7.015" placeholder="赔率" title="第三串 赔率">
-              </label>
-              <label class="stake-card">
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake3" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第三串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds3" type="number" min="0" step="0.001" value="7.015" placeholder="赔率" title="第三串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
                 <span class="score-label">第五串</span>
-                <span class="field-label">第五串 本金</span>
-                <input class="stake-input" id="stake5" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第五串 本金">
-                <span class="field-label">第五串 赔率</span>
-                <input class="stake-input" id="odds5" type="number" min="0" step="0.001" value="3.174" placeholder="赔率" title="第五串 赔率">
-              </label>
-              <label class="stake-card">
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake5" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第五串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds5" type="number" min="0" step="0.001" value="3.174" placeholder="赔率" title="第五串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
                 <span class="score-label">第七串</span>
-                <span class="field-label">第七串 本金</span>
-                <input class="stake-input" id="stake7" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第七串 本金">
-                <span class="field-label">第七串 赔率</span>
-                <input class="stake-input" id="odds7" type="number" min="0" step="0.001" value="6.91" placeholder="赔率" title="第七串 赔率">
-              </label>
-              <label class="stake-card">
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake7" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第七串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds7" type="number" min="0" step="0.001" value="6.91" placeholder="赔率" title="第七串 赔率">
+                </label>
+              </div>
+              <div class="stake-card">
                 <span class="score-label">第八串</span>
-                <span class="field-label">第八串 本金</span>
-                <input class="stake-input" id="stake8" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第八串 本金">
-                <span class="field-label">第八串 赔率</span>
-                <input class="stake-input" id="odds8" type="number" min="0" step="0.001" value="8.96" placeholder="赔率" title="第八串 赔率">
-              </label>
+                <label class="stake-field">
+                  <span class="field-label">本金</span>
+                  <input class="stake-input" id="stake8" type="number" min="0" step="0.01" value="0" placeholder="本金" title="第八串 本金">
+                </label>
+                <label class="stake-field">
+                  <span class="field-label">赔率</span>
+                  <input class="stake-input" id="odds8" type="number" min="0" step="0.001" value="8.96" placeholder="赔率" title="第八串 赔率">
+                </label>
+              </div>
             </div>
           </div>
 
