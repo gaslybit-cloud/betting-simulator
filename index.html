@@ -366,7 +366,7 @@
 
     .condition-list {
       display: grid;
-      gap: 7px;
+      gap: 3px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -377,48 +377,28 @@
     }
 
     .condition-item {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: start;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
       line-height: 1.35;
+      overflow-wrap: anywhere;
     }
 
     .condition-item.hit {
-      border-color: #b8ded0;
-      background: var(--good-bg);
+      color: #0d604e;
+      background: transparent;
+      font-weight: 750;
     }
 
     .condition-item.miss {
-      border-color: #efc6bf;
-      background: var(--bad-bg);
+      color: var(--warn);
+      background: transparent;
+      font-weight: 750;
     }
 
     .condition-text {
       min-width: 0;
-      color: var(--ink);
-      overflow-wrap: anywhere;
     }
 
     .condition-result {
-      border-radius: 999px;
-      padding: 2px 7px;
-      font-size: 12px;
-      font-weight: 800;
       white-space: nowrap;
-    }
-
-    .condition-item.hit .condition-result {
-      color: #0d604e;
-      background: #d5eee4;
-    }
-
-    .condition-item.miss .condition-result {
-      color: var(--warn);
-      background: #f4d8d3;
     }
 
     @media (max-width: 900px) {
@@ -863,8 +843,8 @@
       const items = conditions
         .map(([label, hit]) => `
           <li class="condition-item ${hit ? "hit" : "miss"}">
-            <span class="condition-text">${label}</span>
-            <span class="condition-result">${hit ? "命中" : "未中"}</span>
+            <span class="condition-text">${label}: </span>
+            <span class="condition-result">${hit ? "命中 ✓" : "未中 ✕"}</span>
           </li>
         `)
         .join("");
